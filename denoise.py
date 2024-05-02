@@ -22,10 +22,10 @@ def smooth_quaternions(quaternions, joint_num, window_size=5):
 from scipy.signal import butter, filtfilt
 
 
-def butterworth(matrix, joint_num):
+def butterworth(matrix, joint_num, cutoff = 8):
     # 设定滤波器参数
     fs = 30  # 假设采样频率是30Hz
-    cutoff = 5  # 截止频率3Hz
+    # cutoff = 5  # 截止频率3Hz
     order = 2  # 滤波器阶数
 
     # 设计滤波器
@@ -40,7 +40,7 @@ def butterworth(matrix, joint_num):
     return filtered_quaternions
 
 from scipy.fft import fft, ifft, fftfreq
-def fft_smooth(matrix, num_frames, num_joints):
+def fft_smooth(matrix, num_frames, num_joints, cutoff_ratio=0.3):
     print(matrix.shape)
     quaternion_freqs = np.empty_like(matrix, dtype=np.complex)
     freqs = fftfreq(num_frames)
@@ -50,7 +50,7 @@ def fft_smooth(matrix, num_frames, num_joints):
             quaternion_freqs[:, i, j] = fft(matrix[:, i, j])
 
     max_freq = np.abs(freqs).max()
-    cutoff_frequency = 0.3 * max_freq  # 设定截止频率为最大频率的20%
+    cutoff_frequency = cutoff_ratio * max_freq  # 设定截止频率为最大频率的20%
     # cutoff_frequency = 0.1  # 设定截止频率
     low_pass_filter = np.abs(freqs) < cutoff_frequency
     
@@ -67,19 +67,19 @@ def fft_smooth(matrix, num_frames, num_joints):
 
 from scipy.signal import welch, wiener
 
-def wiener_smooth(matrix,num_joints):
+def wiener_smooth(matrix,num_joints, noise = 0.01):
     filtered_quaternions = np.empty_like(matrix)
     for i in range(num_joints):
         for j in range(4):  # 四元数的每个分量
             # 边缘扩展
             # extended_data = np.pad(matrix[:, i, j], (1, 1), mode='edge')
             
-            filtered_quaternions[:, i, j] = wiener(matrix[:, i, j], mysize=3, noise=0.01)
+            filtered_quaternions[:, i, j] = wiener(matrix[:, i, j], mysize=3, noise = noise)
     return filtered_quaternions
 
-def gaussian_smooth(matrix,num_joints):
-    kernel_size = 5  # 核大小
-    sigma = 1.0
+def gaussian_smooth(matrix,num_joints, sigma = 0.1):
+    kernel_size = 3  # 核大小
+    # sigma = 1.0
     kernel = np.exp(-np.square(np.arange(kernel_size) - kernel_size // 2) / (2 * sigma ** 2))
     kernel /= np.sum(kernel)  # 归一化使总和为1
     smoothed_quaternions = np.empty_like(matrix)

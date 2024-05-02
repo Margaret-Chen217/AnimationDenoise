@@ -55,56 +55,85 @@ for frame in range(frame_num):
 # 预处理
 
 # 滑动窗口
-smoothed_quaternions = denoise.smooth_quaternions(result_mat, 55,window_size=3)
+# smoothed_quaternions = denoise.smooth_quaternions(result_mat, 55,window_size=3)
 
-# butter
+# # butter
 butter_quaternions = denoise.butterworth(result_mat, 55)
 
-# fft
-fft_quaternions = denoise.fft_smooth(result_mat, frame_num, 55)
+# # fft
+# _smooth(result_mat, frame_num, 55, 0.7)
 
-# wiener filter
-wiener_quaternions = denoise.wiener_smooth(result_mat, 55)
+# # wiener filter
+# wiener_quaternions = denoise.wiener_smooth(result_mat, 55)
 
-# gaussian filter
-gaussian_quaternions = denoise.gaussian_smooth(result_mat, 55)
+# # gaussian filter
+# gaussian_quaternions = denoise.gaussian_smooth(result_mat, 55, 0.2)
 
 # 
 # visualize.save_result(result_mat, "4_2_0", "origin")
 # visualize.save_result(smoothed_quaternions, "4_2_1", "slide")
-# visualize.save_result(butter_quaternions, "4_2_2", "butter")
+visualize.save_result(butter_quaternions, "4_2_2", "butter")
 # visualize.save_result(fft_quaternions, "4_2_3", "fft")
 # visualize.save_result(wiener_quaternions, "4_2_4", "wiener")
 # visualize.save_result(gaussian_quaternions, "4_2_5", "gaussian")
 
 import evaluate
-result = evaluate.mse_quaternions(result_mat, smoothed_quaternions)
-print("MSE Slide:", result)
+# result = evaluate.mse_quaternions(result_mat, smoothed_quaternions)
+# print("MSE Slide:", result)
 
-result = evaluate.mse_quaternions(result_mat, butter_quaternions)
-print("MSE butter:", result)
+# result = evaluate.mse_quaternions(result_mat, butter_quaternions)
+# print("MSE butter:", result)
 
-result = evaluate.mse_quaternions(result_mat, fft_quaternions)
-print("MSE fft:", result)
+# result = evaluate.mse_quaternions(result_mat, fft_quaternions)
+# print("MSE fft:", result)
 
-result = evaluate.mse_quaternions(result_mat, wiener_quaternions)
-print("MSE wiener:", result)
+# result = evaluate.mse_quaternions(result_mat, wiener_quaternions)
+# print("MSE wiener:", result)
 
-result = evaluate.mse_quaternions(result_mat, gaussian_quaternions)
-print("MSE gaussian:", result)
+# result = evaluate.mse_quaternions(result_mat, gaussian_quaternions)
+# print("MSE gaussian:", result)
 
 
-result = evaluate.psnr_quaternions(result_mat, smoothed_quaternions)
-print("PSNR Slide:", result)
+# result = evaluate.psnr_quaternions(result_mat, smoothed_quaternions)
+# print("PSNR Slide:", result)
 
-result = evaluate.psnr_quaternions(result_mat, butter_quaternions)
-print("PSNR butter:", result)
+# result = evaluate.psnr_quaternions(result_mat, butter_quaternions)
+# print("PSNR butter:", result)
 
-result = evaluate.psnr_quaternions(result_mat, fft_quaternions)
-print("PSNR fft:", result)
+# result = evaluate.psnr_quaternions(result_mat, fft_quaternions)
+# print("PSNR fft:", result)
 
-result = evaluate.psnr_quaternions(result_mat, wiener_quaternions)
-print("PSNR wiener:", result)
+# result = evaluate.psnr_quaternions(result_mat, wiener_quaternions)
+# print("PSNR wiener:", result)
 
-result = evaluate.psnr_quaternions(result_mat, gaussian_quaternions)
-print("PSNR gaussian:", result)
+# result = evaluate.psnr_quaternions(result_mat, gaussian_quaternions)
+# print("PSNR gaussian:", result)
+# import numpy as np
+
+# window_sizes = np.arange(0, 1, 0.1)
+
+# psnr_values = []
+
+# for size in window_sizes:
+#     quaternions = denoise.fft_smooth(result_mat,frame_num, 55, size)
+#     current_psnr = evaluate.psnr_quaternions(result_mat, quaternions)
+#     psnr_values.append(current_psnr)
+
+# print(psnr_values)
+
+# import matplotlib.pyplot as plt
+
+# plt.figure(figsize=(10, 6))
+# plt.plot(window_sizes, psnr_values, marker='o', linestyle='-')
+# plt.title('Fourier - PSNR')
+# plt.xlabel('Cutoff Ratio')
+# plt.ylabel('PSNR')
+# plt.grid(True)
+# plt.show()
+# filename = "fourier_psnr"
+# import os
+# output_path = os.path.join("img", filename)
+# plt.savefig(output_path)
+
+# 3D曲面
+
